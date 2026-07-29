@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard · Ankahi</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="gate" class="gate">
+  <div>
+    <h2 style="font-family:var(--font-display-hi); margin-bottom:12px;">Checking admin access…</h2>
+    <p class="hint">You need to be logged in as an admin to view this page.</p>
+    <button class="btn btn-primary" style="margin-top:16px;" onclick="window.location.href='index.html'">Back to site</button>
+  </div>
+</div>
+
+<div class="admin-body" id="admin-content" style="display:none;">
+  <div class="admin-title">📊 Admin Dashboard</div>
+  <div class="admin-sub">Ankahi — manage stories, users, and comments</div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-num" id="stat-stories">0</div><div class="stat-label">Total stories</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-users">0</div><div class="stat-label">Total users</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-likes">0</div><div class="stat-label">Total likes</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-comments">0</div><div class="stat-label">Total comments</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-reads">0</div><div class="stat-label">Total reads</div></div>
+  </div>
+
+  <div class="admin-table-wrap">
+    <h3>Manage stories</h3>
+    <table>
+      <thead><tr><th>Title</th><th>Author</th><th>Category</th><th>Likes</th><th>Reads</th><th>Comments</th><th></th></tr></thead>
+      <tbody id="stories-table"></tbody>
+    </table>
+  </div>
+
+  <div class="admin-table-wrap">
+    <h3>Manage users</h3>
+    <table>
+      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th></th></tr></thead>
+      <tbody id="users-table"></tbody>
+    </table>
+  </div>
+
+  <div class="admin-table-wrap">
+    <h3>Recent comments (moderation)</h3>
+    <table>
+      <thead><tr><th>Comment</th><th>Author</th><th>Story</th><th></th></tr></thead>
+      <tbody id="comments-table"></tbody>
+    </table>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

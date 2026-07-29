@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="hi" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>अनकही · Ankahi</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e0a458">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="brand" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <span class="brand-mark">अनकही</span>
+    <span class="brand-sub" data-i18n="subtitle">Untold Stories</span>
+  </div>
+
+  <div class="search-bar">
+    <span>🔍</span>
+    <input type="text" id="search-input" data-i18n-ph="searchPh" placeholder="Search stories...">
+  </div>
+  <select class="cat-select" id="cat-filter"></select>
+
+  <div class="header-actions">
+    <button class="icon-round" onclick="toggleTheme()"><span id="theme-icon">🌙</span></button>
+    <div class="lang-toggle">
+      <button id="btn-lang-hi" onclick="setLang('hi')">हिं</button>
+      <button id="btn-lang-en" onclick="setLang('en')">EN</button>
+    </div>
+    <a class="icon-round" id="admin-link" href="admin.html" style="display:none; text-decoration:none;" title="Admin dashboard">📊</a>
+    <button class="btn btn-ghost btn-sm" id="login-nav-btn" onclick="openLoginModal()" data-i18n="btnLogin">Log in</button>
+    <button class="avatar-btn" id="avatar-btn" style="display:none" onclick="openProfileModal()"></button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-eyebrow" data-i18n="heroEyebrow">Hidden thoughts, spoken at last</div>
+  <div class="hero-quote-hi">किसी के इंतज़ार में कैसे जिया जाता है...</div>
+  <div class="hero-quote-en" data-i18n="heroSub">How does one go on living, waiting for someone?</div>
+  <div class="hero-cta">
+    <button class="btn btn-primary" onclick="openWriteModal()" data-i18n="btnWrite">Write your story</button>
+    <a href="#stories" class="btn btn-ghost" data-i18n="btnReadNav">Read stories</a>
+  </div>
+</section>
+
+<section class="block" id="about">
+  <div class="about-wrap">
+    <div class="about-mark">AB</div>
+    <div class="about-body">
+      <h3>Abhishek Bajpai</h3>
+      <div class="about-role" data-i18n="aboutRole">Software Engineer, TCS · BCA &amp; MCA (AI &amp; ML)</div>
+      <p class="about-text" data-i18n="aboutText"></p>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="stories">
+  <div class="section-head">
+    <div class="section-eyebrow" data-i18n="storiesEyebrow">A wall of open journals</div>
+    <div class="section-title" data-i18n="storiesTitle">Stories from the heart</div>
+  </div>
+  <div class="stories-grid" id="stories-grid">
+    <div class="empty-state">Loading...</div>
+  </div>
+</section>
+
+<footer data-i18n="footerText">Ankahi — a space for the things we never said.</footer>
+
+<button class="fab" onclick="openWriteModal()">
+  <span>✎</span> <span data-i18n="fabWrite">Write a story</span>
+</button>
+
+<!-- WRITE MODAL -->
+<div class="overlay" id="write-overlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeWriteModal()">&times;</button>
+    <h2 data-i18n="addStoryTitle">Write your story</h2>
+
+    <div class="field-row">
+      <div class="field">
+        <label data-i18n="fieldTitle">Title</label>
+        <input type="text" id="input-title" maxlength="120">
+      </div>
+      <div class="field">
+        <label data-i18n="fieldCategory">Category</label>
+        <select id="input-category"></select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label data-i18n="fieldCover">Cover image</label>
+      <div class="file-drop" id="cover-drop" onclick="document.getElementById('input-cover').click()">
+        <span id="cover-drop-text" data-i18n="fieldCoverHint">Click to choose a cover image</span>
+      </div>
+      <input type="file" id="input-cover" accept="image/*" style="display:none" onchange="handleCoverSelect(event)">
+      <img id="cover-preview" class="cover-preview">
+    </div>
+
+    <div class="field">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <label data-i18n="fieldContent" style="margin-bottom:0">Your story</label>
+        <button type="button" class="ai-btn" onclick="openAiPanel()" data-i18n="aiGenerate">✨ Generate with AI</button>
+      </div>
+      <div id="ai-panel" style="display:none; background:var(--card-2); border-radius:4px; padding:12px; margin:10px 0;">
+        <div id="ai-key-row" style="margin-bottom:8px;">
+          <label data-i18n="aiKeyLabel" style="font-size:.7rem;">Anthropic API key (stored locally in your browser only)</label>
+          <input type="password" id="ai-key-input" placeholder="sk-ant-...">
+        </div>
+        <div class="field-row" style="margin-top:8px;">
+          <input type="text" id="ai-topic" data-i18n-ph="aiTopicPh" placeholder="Topic">
+          <input type="text" id="ai-mood" data-i18n-ph="aiMoodPh" placeholder="Mood">
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+          <span class="hint" id="ai-status"></span>
+          <button type="button" class="btn btn-primary btn-sm" onclick="runAiGenerate()">Generate</button>
+        </div>
+      </div>
+      <textarea id="input-content" data-i18n-ph="fieldContentPh"></textarea>
+    </div>
+
+    <div class="field">
+      <label data-i18n="fieldPdf">Attach PDF (optional)</label>
+      <div class="file-drop" id="pdf-drop" onclick="document.getElementById('input-pdf').click()">
+        <span id="pdf-drop-text" data-i18n="fieldPdfHint">Click to attach a PDF</span>
+      </div>
+      <input type="file" id="input-pdf" accept="application/pdf" style="display:none" onchange="handlePdfSelect(event)">
+      <div class="hint" data-i18n="pdfSizeHint">Max size ~4 MB</div>
+    </div>
+
+    <div class="error-text" id="form-error"></div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeWriteModal()" data-i18n="btnCancel">Cancel</button>
+      <button class="btn btn-primary" onclick="publishStory()" id="btn-publish" data-i18n="btnPublish">Publish story</button>
+    </div>
+  </div>
+</div>
+
+<!-- READ MODAL -->
+<div class="overlay" id="read-overlay">
+  <div class="modal read-modal">
+    <button class="modal-close" onclick="closeReadModal()">&times;</button>
+    <img id="read-cover" class="read-cover" style="display:none">
+    <div class="read-title" id="read-title"></div>
+    <div class="read-meta" id="read-meta"></div>
+    <div class="read-content" id="read-content"></div>
+    <a id="read-pdf-link" class="read-pdf-link" style="display:none" target="_blank">
+      <span>⬇</span> <span data-i18n="btnDownloadPdf">Download PDF</span>
+    </a>
+
+    <div class="like-row">
+      <button class="like-btn" id="like-btn" onclick="toggleLike()">
+        <span>❤️</span> <span class="like-count">0</span>
+      </button>
+    </div>
+
+    <div class="comments-section">
+      <h4 data-i18n="commentsLbl">Comments</h4>
+      <div class="comment-form">
+        <input type="text" id="comment-input" data-i18n-ph="commentPh" placeholder="Add a comment...">
+        <button class="btn btn-primary btn-sm" onclick="submitComment()" data-i18n="btnSend">Send</button>
+      </div>
+      <div id="comments-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN / SIGNUP MODAL -->
+<div class="overlay" id="login-overlay">
+  <div class="modal narrow">
+    <button class="modal-close" onclick="closeLoginModal()">&times;</button>
+    <div class="tab-row">
+      <button class="tab-btn active" id="tab-login" onclick="showAuthTab('login')" data-i18n="tabLogin">Log in</button>
+      <button class="tab-btn" id="tab-signup" onclick="showAuthTab('signup')" data-i18n="tabSignup">Sign up</button>
+    </div>
+    <div class="error-text" id="auth-error"></div>
+
+    <div id="login-form">
+      <div class="field">
+        <label data-i18n="fieldEmail">Email</label>
+        <input type="email" id="login-email">
+      </div>
+      <div class="field">
+        <label data-i18n="fieldPassword">Password</label>
+        <input type="password" id="login-password">
+      </div>
+      <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="doLogin()" data-i18n="btnLogin">Log in</button>
+    </div>
+
+    <div id="signup-form" style="display:none;">
+      <div class="field">
+        <label data-i18n="fieldName">Name</label>
+        <input type="text" id="signup-name">
+      </div>
+      <div class="field">
+        <label data-i18n="fieldEmail">Email</label>
+        <input type="email" id="signup-email">
+      </div>
+      <div class="field">
+        <label data-i18n="fieldPassword">Password</label>
+        <input type="password" id="signup-password">
+      </div>
+      <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="doSignup()" data-i18n="btnSignup">Sign up</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="overlay" id="profile-overlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeProfileModal()">&times;</button>
+    <h2 data-i18n="profileTitle">Your profile</h2>
+    <div class="profile-header">
+      <div class="profile-avatar-lg" id="profile-avatar"></div>
+      <div>
+        <div id="profile-name" style="font-weight:600; font-size:1.1rem;"></div>
+        <div id="profile-email" class="hint"></div>
+        <div id="profile-role" class="badge" style="margin-top:6px; display:inline-block;"></div>
+      </div>
+    </div>
+    <h4 data-i18n="yourStories" style="margin-bottom:10px;">Your stories</h4>
+    <div id="profile-stories"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="doLogout()" data-i18n="btnLogout">Log out</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase SDK (compat, no build step needed) -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/ai-generator.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
