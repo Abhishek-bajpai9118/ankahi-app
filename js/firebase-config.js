@@ -23,7 +23,7 @@ const db = firebase.firestore();
 /* Any email listed here is automatically granted the "admin" role
    the first time they sign up / log in.
    *** REPLACE THIS with the email you'll sign up with on the site *** */
-const ADMIN_EMAILS = ["you@example.com"];
+const ADMIN_EMAILS = ["ab895707@gmail.com"];
 
 /* ============================================================
    CLOUDINARY CONFIG — free image/PDF hosting, no card required
