@@ -142,6 +142,23 @@ function initTheme(){
   setTheme(localStorage.getItem("ankahi-theme") || "dark");
 }
 
+/* ---------- Cloudinary upload (free, no card, replaces Firebase Storage) ---------- */
+async function uploadToCloudinary(file, resourceType){
+  // resourceType: "image" for covers, "raw" for PDFs
+  const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`;
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+  const res = await fetch(url, { method: "POST", body: formData });
+  if(!res.ok){
+    const errText = await res.text();
+    throw new Error("Cloudinary upload failed: " + errText);
+  }
+  const data = await res.json();
+  return data.secure_url;
+}
+
 /* ---------- categories ---------- */
 function populateCategoryFilter(){
   const sel = document.getElementById("cat-filter");
@@ -302,21 +319,22 @@ async function publishStory(){
   if(!coverBase64File){ showFormError(t("errCover")); return; }
   if(!content){ showFormError(t("errContent")); return; }
 
+  if(CLOUDINARY_CLOUD_NAME === "YOUR_CLOUD_NAME"){
+    showFormError("Cloudinary isn't configured yet — add your cloud name & upload preset in js/firebase-config.js");
+    return;
+  }
+
   const btn = document.getElementById("btn-publish");
   btn.disabled = true;
   try{
     const storyRef = db.collection("stories").doc();
     const id = storyRef.id;
 
-    const coverRef = storage.ref(`covers/${id}/${coverBase64File.file.name}`);
-    await coverRef.put(coverBase64File.file);
-    const coverURL = await coverRef.getDownloadURL();
+    const coverURL = await uploadToCloudinary(coverBase64File.file, "image");
 
     let pdfURL = null, pdfName = null;
     if(pdfFile){
-      const pdfRef = storage.ref(`pdfs/${id}/${pdfFile.name}`);
-      await pdfRef.put(pdfFile);
-      pdfURL = await pdfRef.getDownloadURL();
+      pdfURL = await uploadToCloudinary(pdfFile, "raw");
       pdfName = pdfFile.name;
     }
 

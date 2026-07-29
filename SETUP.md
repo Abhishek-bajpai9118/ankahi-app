@@ -13,7 +13,6 @@ js/ai-generator.js     AI story generator (client-side, bring-your-own key)
 manifest.json, sw.js    PWA support (installable, offline app shell)
 icons/                Placeholder app icons — swap for your own logo
 firestore.rules        Security rules for Firestore (paste into Firebase console)
-storage.rules          Security rules for Storage (paste into Firebase console)
 netlify/functions/     Optional secure server-side AI proxy for Netlify
 ```
 
@@ -21,21 +20,35 @@ netlify/functions/     Optional secure server-side AI proxy for Netlify
 1. Go to https://console.firebase.google.com → **Add project** → follow the wizard.
 2. In your project, go to **Build → Authentication → Get started → Email/Password → Enable**.
 3. Go to **Build → Firestore Database → Create database** → start in **production mode**.
-4. Go to **Build → Storage → Get started** → start in production mode.
-5. Go to **Project settings (gear icon) → General → Your apps → Add app → Web (</>)**.
+4. Go to **Project settings (gear icon) → General → Your apps → Add app → Web (</>)**.
    Copy the `firebaseConfig` object shown.
+
+> **Note on file storage:** this project does NOT use Firebase Storage,
+> because Google now requires the paid "Blaze" plan (a card on file) just to
+> enable a Storage bucket, even though usage would stay free. Instead, cover
+> images and PDFs are uploaded to **Cloudinary**, which has a genuine free
+> tier with no card required — see step 1b below.
+
+## 1b. Create your Cloudinary account (free, no card, for images/PDFs)
+1. Sign up free at https://cloudinary.com/users/register/free
+2. On your dashboard, copy the **"Cloud name"** shown near the top.
+3. Go to **Settings (gear icon) → Upload** tab → **Upload presets** →
+   **Add upload preset**.
+4. Set **Signing Mode** to **Unsigned** (important — this lets the site
+   upload without a secret key). Give it a name → **Save**.
 
 ## 2. Configure this project
 1. Open `js/firebase-config.js` and paste your `firebaseConfig` values in.
 2. In the same file, set `ADMIN_EMAILS` to your own email address(es) — whoever
    signs up with one of these emails automatically becomes an admin and can
    see the 📊 admin link in the header and access `admin.html`.
+3. Still in `js/firebase-config.js`, set `CLOUDINARY_CLOUD_NAME` to your
+   Cloudinary cloud name, and `CLOUDINARY_UPLOAD_PRESET` to the unsigned
+   preset name you created in step 1b.
 
-## 3. Apply the security rules
-1. Firebase console → **Firestore Database → Rules** tab → paste the contents
-   of `firestore.rules` → **Publish**.
-2. Firebase console → **Storage → Rules** tab → paste the contents of
-   `storage.rules` → **Publish**.
+## 3. Apply the Firestore security rules
+Firebase console → **Firestore Database → Rules** tab → paste the contents
+of `firestore.rules` → **Publish**.
 
 Without this step, story/comment writes will be rejected by Firebase.
 
