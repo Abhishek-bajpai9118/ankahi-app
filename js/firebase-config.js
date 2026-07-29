@@ -23,7 +23,7 @@ const db = firebase.firestore();
 /* Any email listed here is automatically granted the "admin" role
    the first time they sign up / log in.
    *** REPLACE THIS with the email you'll sign up with on the site *** */
-const ADMIN_EMAILS = ["ab895707@gmail.com"];
+const ADMIN_EMAILS = ["you@example.com"];
 
 /* ============================================================
    CLOUDINARY CONFIG — free image/PDF hosting, no card required
@@ -32,5 +32,28 @@ const ADMIN_EMAILS = ["ab895707@gmail.com"];
    labeled "Cloud name") — it is NOT the long ID in your browser's
    URL bar. It usually looks like a short word, e.g. "dxyz123ab".
    ============================================================ */
-const CLOUDINARY_CLOUD_NAME = "h9jlfe2k";
+const CLOUDINARY_CLOUD_NAME = "YOUR_CLOUD_NAME";
 const CLOUDINARY_UPLOAD_PRESET = "ankahi_uploads";
+
+/* ============================================================
+   AI STORY GENERATOR — optional
+   If you want the "Generate with AI" button to work without asking
+   every visitor for their own key, paste your Anthropic API key
+   below. Get one at https://console.anthropic.com/settings/keys
+
+   ⚠️ IMPORTANT SECURITY WARNING:
+   This file is public source code — anyone who opens your deployed
+   site's dev tools (or views the GitHub repo, if public) can read
+   this key and use it, and you would be billed for their usage.
+   This is only reasonably safe if:
+     - your GitHub repo is PRIVATE, and
+     - you trust everyone who will use this site, or
+     - you've set a low spending limit on this key in the
+       Anthropic Console as a safety net.
+   For a truly public site, leave this blank and use the safer
+   Netlify Function proxy described in netlify/functions/generate-story.js
+   and SETUP.md instead.
+
+   Leave as "" to keep asking each visitor for their own key.
+   ============================================================ */
+const ANTHROPIC_API_KEY = "";
