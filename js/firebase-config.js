@@ -1,14 +1,13 @@
 /* ============================================================
-   FIREBASE CONFIG — REPLACE WITH YOUR OWN PROJECT VALUES
-   Get these from: Firebase Console → Project Settings → General
+   FIREBASE CONFIG
    ============================================================ */
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDCFFuqdMr4G1z21-KQdv0kBUh5LVaaNgE",
+  authDomain: "ankahi-app-83258.firebaseapp.com",
+  projectId: "ankahi-app-83258",
+  storageBucket: "ankahi-app-83258.firebasestorage.app",
+  messagingSenderId: "585479210824",
+  appId: "1:585479210824:web:f16a3c33a855a17915557d"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -22,16 +21,16 @@ const db = firebase.firestore();
    See CLOUDINARY_CLOUD_NAME / CLOUDINARY_UPLOAD_PRESET below. */
 
 /* Any email listed here is automatically granted the "admin" role
-   the first time they sign up / log in. Add your own email(s). */
+   the first time they sign up / log in.
+   *** REPLACE THIS with the email you'll sign up with on the site *** */
 const ADMIN_EMAILS = ["you@example.com"];
 
 /* ============================================================
    CLOUDINARY CONFIG — free image/PDF hosting, no card required
-   1. Sign up free at https://cloudinary.com/users/register/free
-   2. Copy your "Cloud name" from the dashboard into CLOUDINARY_CLOUD_NAME
-   3. Settings → Upload → Upload presets → Add upload preset
-      → Signing Mode: "Unsigned" → give it a name → Save
-      → paste that name into CLOUDINARY_UPLOAD_PRESET
+   *** REPLACE CLOUDINARY_CLOUD_NAME below ***
+   Find it on your Cloudinary dashboard Home page (top of screen,
+   labeled "Cloud name") — it is NOT the long ID in your browser's
+   URL bar. It usually looks like a short word, e.g. "dxyz123ab".
    ============================================================ */
-const CLOUDINARY_CLOUD_NAME = "YOUR_CLOUD_NAME";
-const CLOUDINARY_UPLOAD_PRESET = "YOUR_UPLOAD_PRESET";
+const CLOUDINARY_CLOUD_NAME = "h9jlfe2k";
+const CLOUDINARY_UPLOAD_PRESET = "ankahi_uploads";
